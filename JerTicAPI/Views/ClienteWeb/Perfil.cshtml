@@ -1,0 +1,95 @@
+@model JerTicAPI.ViewModels.PerfilViewModel
+@{
+    ViewData["Title"] = "Mi Perfil";
+    ViewData["Page"]  = "perfil";
+    Layout = "~/Views/Shared/_ClienteLayout.cshtml";
+}
+
+<div class="page-header">
+    <div class="page-tag">// Cuenta</div>
+    <h1 class="page-title">Mi Perfil</h1>
+    <p class="page-sub">Administra tu informacion personal.</p>
+</div>
+
+<div class="page-body">
+    <div class="perfil-wrap">
+
+        <!-- Tarjeta de identidad -->
+        <div class="perfil-top">
+            <div class="perfil-avatar">
+                @(string.IsNullOrEmpty(Model.Nombre) ? "?" :
+                  Model.Nombre.Substring(0,1).ToUpper() +
+                  (string.IsNullOrEmpty(Model.Apellido) ? "" : Model.Apellido.Substring(0,1).ToUpper()))
+            </div>
+            <div>
+                <div class="perfil-fullname">@Model.Nombre @Model.Apellido</div>
+                <div class="perfil-email">@Model.Correo</div>
+                @if (Model.FechaRegistro.HasValue)
+                {
+                    <div class="perfil-since">
+                        Cliente desde @Model.FechaRegistro.Value.ToString("MMMM yyyy")
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Formulario edicion -->
+        <div class="form-card">
+            <div class="form-card-title">Editar Datos</div>
+            <p class="form-card-sub">El correo no se puede modificar desde aqui.</p>
+
+            @if (Model.Error != null)
+            {
+                <div class="alert alert-error">
+                    <span class="alert-dot"></span> @Model.Error
+                </div>
+            }
+            @if (Model.Exito != null)
+            {
+                <div class="alert alert-success">
+                    <span class="alert-dot"></span> @Model.Exito
+                </div>
+            }
+
+            <form asp-action="Perfil" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="form-row" style="margin-bottom:16px">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Nombre"></label>
+                        <input asp-for="Nombre" class="form-control" placeholder="Tu nombre"/>
+                        <span asp-validation-for="Nombre" class="field-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Apellido"></label>
+                        <input asp-for="Apellido" class="form-control" placeholder="Tu apellido"/>
+                        <span asp-validation-for="Apellido" class="field-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row" style="margin-bottom:16px">
+                    <div class="form-group">
+                        <label class="form-label">Correo electronico</label>
+                        <input class="form-control" value="@Model.Correo" disabled
+                               style="opacity:.5;cursor:not-allowed;"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Telefono"></label>
+                        <input asp-for="Telefono" class="form-control" placeholder="70000000"/>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="margin-top:20px">
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+
+        <div style="margin-top:24px;">
+            <form asp-controller="ClienteWeb" asp-action="Logout" method="post" style="display:inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger">Cerrar sesion</button>
+            </form>
+        </div>
+    </div>
+</div>

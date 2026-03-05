@@ -1,0 +1,146 @@
+@model JerTicAPI.ViewModels.HistorialViewModel
+@{
+    ViewData["Title"] = "Mi Historial";
+    ViewData["Page"]  = "historial";
+    Layout = "~/Views/Shared/_ClienteLayout.cshtml";
+}
+
+<div class="page-header">
+    <div class="page-tag">// Historial</div>
+    <h1 class="page-title">Mi Historial</h1>
+    <p class="page-sub">Registro completo de citas y servicios de tu vehiculo.</p>
+</div>
+
+<div class="page-body">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('citas',this)">
+            Mis Citas (@Model.Citas.Count)
+        </button>
+        <button class="tab-btn" onclick="switchTab('servicios',this)">
+            Servicios (@Model.Servicios.Count)
+        </button>
+        <button class="tab-btn" onclick="switchTab('historial',this)">
+            Historial Detallado (@Model.Historial.Count)
+        </button>
+    </div>
+
+    <!-- TAB CITAS -->
+    <div id="tab-citas" class="tab-panel active">
+        @if (!Model.Citas.Any())
+        {
+            <div class="historial-empty">
+                <div class="historial-empty-title">Sin citas registradas</div>
+                <p class="historial-empty-sub" style="margin-bottom:20px">
+                    Todavia no has agendado ninguna cita.
+                </p>
+                <a class="btn btn-primary" asp-controller="ClienteWeb" asp-action="Cita">
+                    Agendar mi primera cita
+                </a>
+            </div>
+        }
+        else
+        {
+            @foreach (var cita in Model.Citas)
+            {
+                <div class="cita-card">
+                    <div>
+                        <div class="cita-meta">
+                            @cita.Fecha?.ToString("dd/MM/yyyy")
+                            @if (!string.IsNullOrEmpty(cita.Hora))
+                            {
+                                <span> — @cita.Hora</span>
+                            }
+                            <span style="margin-left:8px;opacity:.5">ID #@cita.IdCita</span>
+                        </div>
+                        <div class="cita-motivo">@(cita.Motivo ?? "Sin motivo especificado")</div>
+                    </div>
+                    <span class="badge @cita.CssEstado">@cita.NombreEstado</span>
+                </div>
+            }
+            <div style="margin-top:16px;">
+                <a class="btn btn-secondary" asp-controller="ClienteWeb" asp-action="Cita">
+                    Agendar otra cita
+                </a>
+            </div>
+        }
+    </div>
+
+    <!-- TAB SERVICIOS -->
+    <div id="tab-servicios" class="tab-panel">
+        @if (!Model.Servicios.Any())
+        {
+            <div class="historial-empty">
+                <div class="historial-empty-title">Sin servicios registrados</div>
+                <p class="historial-empty-sub">Los servicios apareceran aqui una vez que el taller los registre.</p>
+            </div>
+        }
+        else
+        {
+            <div style="display:flex;flex-direction:column;gap:10px;max-width:780px;">
+                @foreach (var s in Model.Servicios)
+                {
+                    <div style="
+                        background:#1A1A28;border:1px solid #2A2A3E;
+                        border-radius:12px;padding:20px 24px;
+                        display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;">
+                        <div>
+                            <div style="font-size:11.5px;font-family:'DM Mono',monospace;color:#7070A0;margin-bottom:6px;">
+                                Servicio #@s.IdServicio — Cita #@s.IdCita
+                            </div>
+                            <div style="font-size:14px;font-weight:500;margin-bottom:4px;">
+                                @(string.IsNullOrEmpty(s.Descripcion) ? "Sin descripcion" : s.Descripcion)
+                            </div>
+                            @if (s.Costo.HasValue)
+                            {
+                                <div style="font-family:'DM Mono',monospace;font-size:15px;color:#FFA500;margin-top:8px;">
+                                    $@s.Costo.Value.ToString("0.00")
+                                </div>
+                            }
+                        </div>
+                        <span class="badge @s.NombreEstado.ToLower().Replace(" ","-")
+                            @(s.IdEstado == 6 ? "estado-finalizado" : s.IdEstado == 5 ? "estado-proceso" : s.IdEstado == 7 ? "estado-cancelada" : "estado-pendiente")">
+                            @s.NombreEstado
+                        </span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- TAB HISTORIAL DETALLADO -->
+    <div id="tab-historial" class="tab-panel">
+        @if (!Model.Historial.Any())
+        {
+            <div class="historial-empty">
+                <div class="historial-empty-title">Sin entradas de historial</div>
+                <p class="historial-empty-sub">El historial detallado de trabajos realizados aparecera aqui.</p>
+            </div>
+        }
+        else
+        {
+            <div class="timeline" style="max-width:720px;">
+                @foreach (var h in Model.Historial)
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-date">
+                            @h.FechaEvento?.ToString("dd/MM/yyyy HH:mm")
+                        </div>
+                        <div class="timeline-card">
+                            <p>@h.Descripcion</p>
+                            <small>Servicio #@h.IdServicio</small>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+function switchTab(name, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+}
+</script>

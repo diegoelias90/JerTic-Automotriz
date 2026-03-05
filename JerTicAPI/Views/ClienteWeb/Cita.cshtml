@@ -1,0 +1,81 @@
+@model JerTicAPI.ViewModels.CitaViewModel
+@{
+    ViewData["Title"] = "Pedir Cita";
+    ViewData["Page"]  = "cita";
+    Layout = "~/Views/Shared/_ClienteLayout.cshtml";
+}
+
+<div class="page-header">
+    <div class="page-tag">// Citas</div>
+    <h1 class="page-title">Agendar Cita</h1>
+    <p class="page-sub">Completa el formulario y te contactamos para confirmar el horario.</p>
+</div>
+
+<div class="page-body">
+    <div class="form-card">
+        <div class="form-card-title">Nueva Cita</div>
+        <p class="form-card-sub">Los campos marcados con * son obligatorios.</p>
+
+        @if (Model.Error != null)
+        {
+            <div class="alert alert-error">
+                <span class="alert-dot"></span> @Model.Error
+            </div>
+        }
+        @if (Model.Exito != null)
+        {
+            <div class="alert alert-success">
+                <span class="alert-dot"></span> @Model.Exito
+            </div>
+        }
+
+        <form asp-action="Cita" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-row" style="margin-bottom:18px">
+                <div class="form-group">
+                    <label class="form-label" asp-for="Fecha">Fecha *</label>
+                    <input asp-for="Fecha" class="form-control"
+                           type="date" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")"/>
+                    <span asp-validation-for="Fecha" class="field-error"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" asp-for="Hora">Hora preferida</label>
+                    <input asp-for="Hora" class="form-control" type="time" min="07:00" max="17:00"/>
+                    <span asp-validation-for="Hora" class="field-error"></span>
+                </div>
+            </div>
+
+            <div class="form-row single" style="margin-bottom:26px">
+                <div class="form-group">
+                    <label class="form-label" asp-for="Motivo">Motivo de la cita *</label>
+                    <textarea asp-for="Motivo" class="form-control"
+                              placeholder="Describe el problema o el servicio que necesitas..."></textarea>
+                    <span asp-validation-for="Motivo" class="field-error"></span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Agendar cita</button>
+                <a class="btn btn-secondary" asp-controller="ClienteWeb" asp-action="Historial">
+                    Ver mis citas
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div style="margin-top:28px;max-width:700px;
+                background:#1A1A28;border:1px solid #2A2A3E;
+                border-radius:12px;padding:22px 28px;
+                display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#FFA500;flex-shrink:0;margin-top:5px;"></div>
+        <div>
+            <p style="font-size:13.5px;font-weight:600;margin-bottom:4px;">Informacion importante</p>
+            <p style="font-size:13px;color:#7070A0;line-height:1.7;">
+                Al agendar una cita, nuestro equipo revisara tu solicitud y te contactara al correo
+                registrado para confirmar el horario. Las citas quedan en estado
+                <strong style="color:#E8E8F0;">Pendiente</strong> hasta ser confirmadas.
+            </p>
+        </div>
+    </div>
+</div>

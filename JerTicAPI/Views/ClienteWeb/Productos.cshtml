@@ -1,0 +1,50 @@
+@model IEnumerable<JerTicAPI.Models.Producto>
+@{
+    ViewData["Title"] = "Productos";
+    ViewData["Page"] = "productos";
+    Layout = "~/Views/Shared/_ClienteLayout.cshtml";
+}
+
+<div class="page-header">
+    <div class="page-tag">// Catalogo</div>
+    <h1 class="page-title">Productos</h1>
+    <p class="page-sub">Repuestos, aceites y herramientas disponibles en stock.</p>
+</div>
+
+<div class="page-body">
+    @if (!Model.Any())
+    {
+        <div class="historial-empty">
+            <div class="historial-empty-title">Sin productos disponibles</div>
+            <p class="historial-empty-sub">En este momento no hay productos con stock disponible.</p>
+        </div>
+    }
+    else
+    {
+        <div class="products-grid">
+            @foreach (var p in Model)
+            {
+                <div class="product-card">
+                    <div class="product-tipo">
+                        @(p.IdTipoProductoNavigation?.Nombre ?? "Producto")
+                    </div>
+                    <div class="product-name">@p.Nombre</div>
+                    <div class="product-desc">@(p.Descripcion ?? "Sin descripcion")</div>
+                    <div class="product-bottom">
+                        <div class="product-price">$@p.Precio?.ToString("0.00")</div>
+                        <div class="product-stock @(p.Stock < 5 ? "stock-low" : "")">
+                            @if (p.Stock < 5)
+                            {
+                                <span>Ultimas @p.Stock unidades</span>
+                            }
+                            else
+                            {
+                                <span>@p.Stock en stock</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

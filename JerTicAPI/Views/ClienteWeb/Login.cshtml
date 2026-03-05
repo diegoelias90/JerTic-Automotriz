@@ -1,0 +1,51 @@
+﻿@* === LOGIN.CSHTML === *@
+@model JerTicAPI.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar sesion";
+    Layout = "~/Views/Shared/_ClienteLayout.cshtml";
+}
+
+<div class="auth-wrap">
+    <div class="auth-card">
+        <div class="auth-logo">JERTIC<span>.</span></div>
+        <h1 class="auth-title">Bienvenido</h1>
+        <p class="auth-sub">Ingresa con tu correo y contrasena.</p>
+
+        @if (Model.Error != null)
+        {
+            <div class="alert alert-error">
+                <span class="alert-dot"></span> @Model.Error
+            </div>
+        }
+
+        <form asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            <div class="form-row single" style="margin-bottom:16px">
+                <div class="form-group">
+                    <label class="form-label" asp-for="Correo"></label>
+                    <input asp-for="Correo" class="form-control @(ViewData.ModelState["Correo"]?.Errors.Count > 0 ? "input-error" : "")"
+                           type="email" placeholder="correo@ejemplo.com" autocomplete="email" />
+                    <span asp-validation-for="Correo" class="field-error"></span>
+                </div>
+            </div>
+
+            <div class="form-row single" style="margin-bottom:24px">
+                <div class="form-group">
+                    <label class="form-label" asp-for="Token"></label>
+                    <input asp-for="Token" class="form-control @(ViewData.ModelState["Token"]?.Errors.Count > 0 ? "input-error" : "")"
+                           type="password" placeholder="Tu contrasena" autocomplete="current-password" />
+                    <span asp-validation-for="Token" class="field-error"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">Ingresar</button>
+        </form>
+
+        <div class="auth-switch">
+            No tienes cuenta?
+            <a asp-controller="ClienteWeb" asp-action="Registro">Crear una aqui</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,279 @@
+﻿-- =========================================================
+-- JERTIC AUTOMOTRIZ — MODELO 3FN COMPLETO (SQL SERVER)
+-- CON TRIGGER PARA EVITAR STOCK NEGATIVO
+-- TODO EN UNA SOLA QUERY
+-- =========================================================
+
+IF DB_ID('jertic_automotriz') IS NOT NULL
+BEGIN
+    ALTER DATABASE jertic_automotriz SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE jertic_automotriz;
+END
+GO
+
+CREATE DATABASE jertic_automotriz;
+GO
+
+USE jertic_automotriz;
+GO
+
+-- =========================
+-- CATÁLOGOS
+-- =========================
+
+CREATE TABLE estado_general (
+    id_estado INT IDENTITY PRIMARY KEY,
+    nombre NVARCHAR(50) UNIQUE
+);
+
+CREATE TABLE tipo_usuario (
+    id_tipo_usuario INT IDENTITY PRIMARY KEY,
+    nombre NVARCHAR(50) UNIQUE
+);
+
+CREATE TABLE tipo_producto (
+    id_tipo_producto INT IDENTITY PRIMARY KEY,
+    nombre NVARCHAR(100) UNIQUE
+);
+
+CREATE TABLE tipo_servicio (
+    id_tipo_servicio INT IDENTITY PRIMARY KEY,
+    nombre NVARCHAR(100) UNIQUE,
+    descripcion NVARCHAR(MAX)
+);
+
+CREATE TABLE especialidad_tecnico (
+    id_especialidad INT IDENTITY PRIMARY KEY,
+    nombre NVARCHAR(100) UNIQUE
+);
+
+-- =========================
+-- USUARIOS
+-- =========================
+
+CREATE TABLE usuario (
+    id_usuario INT IDENTITY PRIMARY KEY,
+    nombre NVARCHAR(100),
+    apellido NVARCHAR(100),
+    correo NVARCHAR(150) UNIQUE,
+    telefono NVARCHAR(20),
+    token NVARCHAR(255),
+    fecha_registro DATETIME DEFAULT GETDATE(),
+    id_tipo_usuario INT,
+    id_estado INT,
+    FOREIGN KEY (id_tipo_usuario) REFERENCES tipo_usuario(id_tipo_usuario),
+    FOREIGN KEY (id_estado) REFERENCES estado_general(id_estado)
+);
+
+CREATE TABLE usuario_cliente (
+    id_cliente INT IDENTITY PRIMARY KEY,
+    id_usuario INT UNIQUE,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
+);
+
+CREATE TABLE usuario_tecnico (
+    id_tecnico INT IDENTITY PRIMARY KEY,
+    id_usuario INT UNIQUE,
+    id_especialidad INT,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
+    FOREIGN KEY (id_especialidad) REFERENCES especialidad_tecnico(id_especialidad)
+);
+
+-- =========================
+-- PRODUCTOS
+-- =========================
+
+CREATE TABLE productos (
+    id_producto INT IDENTITY PRIMARY KEY,
+    nombre NVARCHAR(150),
+    descripcion NVARCHAR(MAX),
+    precio DECIMAL(10,2),
+    stock INT,
+    fecha_creacion DATETIME DEFAULT GETDATE(),
+    id_tipo_producto INT,
+    FOREIGN KEY (id_tipo_producto) REFERENCES tipo_producto(id_tipo_producto)
+);
+
+-- =========================
+-- CITAS
+-- =========================
+
+CREATE TABLE cita (
+    id_cita INT IDENTITY PRIMARY KEY,
+    id_cliente INT,
+    fecha DATE,
+    hora TIME,
+    motivo NVARCHAR(MAX),
+    id_estado INT,
+    FOREIGN KEY (id_cliente) REFERENCES usuario_cliente(id_cliente),
+    FOREIGN KEY (id_estado) REFERENCES estado_general(id_estado)
+);
+
+-- =========================
+-- SERVICIOS
+-- =========================
+
+CREATE TABLE servicio (
+    id_servicio INT IDENTITY PRIMARY KEY,
+    id_cita INT,
+    id_tecnico INT,
+    descripcion NVARCHAR(MAX),
+    costo DECIMAL(10,2),
+    fecha_inicio DATETIME,
+    fecha_fin DATETIME,
+    id_estado INT,
+    id_tipo_servicio INT,
+    FOREIGN KEY (id_cita) REFERENCES cita(id_cita),
+    FOREIGN KEY (id_tecnico) REFERENCES usuario_tecnico(id_tecnico),
+    FOREIGN KEY (id_estado) REFERENCES estado_general(id_estado),
+    FOREIGN KEY (id_tipo_servicio) REFERENCES tipo_servicio(id_tipo_servicio)
+);
+
+CREATE TABLE historial_servicios (
+    id_historial INT IDENTITY PRIMARY KEY,
+    id_servicio INT,
+    descripcion NVARCHAR(MAX),
+    fecha_evento DATETIME,
+    FOREIGN KEY (id_servicio) REFERENCES servicio(id_servicio)
+);
+
+-- =========================
+-- VENTAS
+-- =========================
+
+CREATE TABLE venta (
+    id_venta INT IDENTITY PRIMARY KEY,
+    id_cliente INT,
+    fecha DATETIME,
+    total DECIMAL(10,2),
+    FOREIGN KEY (id_cliente) REFERENCES usuario_cliente(id_cliente)
+);
+
+CREATE TABLE detalle_venta (
+    id_detalle INT IDENTITY PRIMARY KEY,
+    id_venta INT,
+    id_producto INT,
+    cantidad INT,
+    precio_unitario DECIMAL(10,2),
+    subtotal DECIMAL(10,2),
+    FOREIGN KEY (id_venta) REFERENCES venta(id_venta),
+    FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+);
+
+-- =========================
+-- TRIGGER EVITAR STOCK NEGATIVO
+-- =========================
+
+GO
+CREATE TRIGGER trg_validar_y_restar_stock
+ON detalle_venta
+INSTEAD OF INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Validar stock suficiente
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        JOIN productos p ON p.id_producto = i.id_producto
+        WHERE p.stock < i.cantidad
+    )
+    BEGIN
+        RAISERROR ('Stock insuficiente para realizar la venta', 16, 1);
+        RETURN;
+    END
+
+    -- Insertar detalle
+    INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, subtotal)
+    SELECT id_venta, id_producto, cantidad, precio_unitario, subtotal
+    FROM inserted;
+
+    -- Descontar stock
+    UPDATE p
+    SET p.stock = p.stock - i.cantidad
+    FROM productos p
+    JOIN inserted i ON p.id_producto = i.id_producto;
+
+END
+GO
+
+-- =========================
+-- DATOS QUEMADOS
+-- =========================
+
+INSERT INTO estado_general (nombre) VALUES
+('Activo'),
+('Inactivo'),
+('Pendiente'),
+('Programada'),
+('En proceso'),
+('Finalizado'),
+('Cancelado');
+
+INSERT INTO tipo_usuario (nombre) VALUES
+('Administrador'),
+('Tecnico'),
+('Cliente');
+
+INSERT INTO tipo_producto (nombre) VALUES
+('Aceites'),
+('Filtros'),
+('Repuestos'),
+('Herramientas');
+
+INSERT INTO tipo_servicio (nombre, descripcion) VALUES
+('Preventivo','Mantenimiento programado'),
+('Correctivo','Reparacion por falla'),
+('Servicio Menor','Revision basica'),
+('Servicio Mayor','Revision profunda'),
+('Especializado','Servicios tecnicos'),
+('Vehiculo Electrico','Servicios EV');
+
+INSERT INTO especialidad_tecnico (nombre) VALUES
+('Mecanica General'),
+('Electricidad Automotriz'),
+('Frenos'),
+('Diagnostico Computarizado');
+
+INSERT INTO usuario (nombre,apellido,correo,telefono,token,id_tipo_usuario,id_estado) VALUES
+('Carlos','Perez','admin@jertic.com','70000001','tok1',1,1),
+('Luis','Martinez','tec1@jertic.com','70000002','tok2',2,1),
+('Maria','Lopez','tec2@jertic.com','70000003','tok3',2,1),
+('Ana','Gomez','cliente1@mail.com','70000004','tok4',3,1),
+('Pedro','Ramirez','cliente2@mail.com','70000005','tok5',3,1);
+
+INSERT INTO usuario_cliente (id_usuario) VALUES (4),(5);
+
+INSERT INTO usuario_tecnico (id_usuario,id_especialidad) VALUES (2,1),(3,2);
+
+INSERT INTO productos (nombre,descripcion,precio,stock,id_tipo_producto) VALUES
+('Aceite 5W30','Sintetico',30,100,1),
+('Filtro Aire','Motor',12,80,2),
+('Pastillas Freno','Delanteras',55,40,3),
+('Llave Inglesa','Herramienta',20,25,4);
+
+INSERT INTO cita (id_cliente,fecha,hora,motivo,id_estado) VALUES
+(1,'2026-03-10','09:00','Mantenimiento preventivo',4),
+(2,'2026-03-11','11:00','Revision frenos',4);
+
+INSERT INTO servicio (id_cita,id_tecnico,descripcion,costo,fecha_inicio,fecha_fin,id_estado,id_tipo_servicio) VALUES
+(1,1,'Cambio aceite',60,GETDATE(),GETDATE(),6,1),
+(2,2,'Cambio pastillas',120,GETDATE(),GETDATE(),6,2);
+
+INSERT INTO historial_servicios (id_servicio,descripcion,fecha_evento) VALUES
+(1,'Servicio completado',GETDATE()),
+(2,'Servicio completado',GETDATE());
+
+INSERT INTO venta (id_cliente,fecha,total) VALUES
+(1,GETDATE(),90),
+(2,GETDATE(),55);
+
+INSERT INTO detalle_venta (id_venta,id_producto,cantidad,precio_unitario,subtotal) VALUES
+(1,1,2,30,60),
+(1,2,1,12,12),
+(2,3,1,55,55);
+
+-- =========================================================
+-- FIN
+-- =========================================================
