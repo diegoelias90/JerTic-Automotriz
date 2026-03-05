@@ -263,30 +263,40 @@ public class CitasPanel extends JPanel {
     // ══════════════════════════════════════════════════════════════════════════
     // LÓGICA — CARGAR TÉCNICOS desde la API
     // ══════════════════════════════════════════════════════════════════════════
-    private void cargarTecnicos() {
-        try {
-            // Endpoint que devuelve los técnicos: GET /api/usuariotecnico o /api/usuario?tipo=2
-            String json = ApiService.get("/usuario");
-            JsonParser parser = new JsonParser(); //Aquí obtiene la respuesta como array 
-            JsonArray arr = parser.parse(json).getAsJsonArray();
+        private void cargarTecnicos() {
+            try {
+                // Cargar desde usuariotecnico para obtener el id_tecnico real
+                String jsonTecnicos = ApiService.get("/usuariotecnico");
+                String jsonUsuarios = ApiService.get("/usuario");
 
-            cmbTecnico.removeAllItems();
-            idsTecnicos.clear();
+                JsonArray tecnicos  = new JsonParser().parse(jsonTecnicos).getAsJsonArray();
+                JsonArray usuarios  = new JsonParser().parse(jsonUsuarios).getAsJsonArray();
 
-            for (JsonElement el : arr) {
-                JsonObject u = el.getAsJsonObject();
-                if (u.get("idTipoUsuario").getAsInt() == 2) { // tipo 2 = Técnico
-                    idsTecnicos.add(u.get("idUsuario").getAsInt());
-                    cmbTecnico.addItem(
-                        u.get("nombre").getAsString() + " " + u.get("apellido").getAsString()
-                    );
+                // Mapear id_usuario → nombre completo
+                java.util.Map<Integer, String> nombres = new java.util.HashMap<>();
+                for (JsonElement el : usuarios) {
+                    JsonObject u = el.getAsJsonObject();
+                    int idU = u.get("idUsuario").getAsInt();
+                    nombres.put(idU, u.get("nombre").getAsString() + " " + u.get("apellido").getAsString());
                 }
-            }
-        } catch (Exception ex) {
-            // Si falla silenciosamente, el combo queda vacío
-        }
-    }
 
+                cmbTecnico.removeAllItems();
+                idsTecnicos.clear();
+
+                for (JsonElement el : tecnicos) {
+                    JsonObject t = el.getAsJsonObject();
+                    int idTecnico  = t.get("idTecnico").getAsInt();
+                    int idUsuario  = t.has("idUsuario") && !t.get("idUsuario").isJsonNull()
+                                     ? t.get("idUsuario").getAsInt() : -1;
+
+                    String nombre = nombres.getOrDefault(idUsuario, "Tecnico #" + idTecnico);
+                    idsTecnicos.add(idTecnico);   // ← id_tecnico, no id_usuario
+                    cmbTecnico.addItem(nombre);
+                }
+            } catch (Exception ex) {
+                // fallback silencioso
+            }
+        }
     // ══════════════════════════════════════════════════════════════════════════
     // LÓGICA — CARGAR TIPOS DE SERVICIO
     // ══════════════════════════════════════════════════════════════════════════
