@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sv.jertic.tecnico.controller.PerfilController"
+            style="-fx-background-color: #F5F5FA;">
+
+    <top>
+        <HBox style="-fx-background-color: #1E1E28; -fx-padding: 14 20 14 20;"
+              alignment="CENTER_LEFT" spacing="20">
+            <Label text="Mi Perfil"
+                   style="-fx-font-size: 20; -fx-font-weight: bold;
+                          -fx-text-fill: #FFA500; -fx-font-family: 'Segoe UI';"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblInfo" text=""
+                   style="-fx-font-size: 12; -fx-text-fill: #B4B4C8;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox style="-fx-padding: 30;" spacing="0" alignment="TOP_CENTER">
+
+            <!-- Tarjeta de perfil -->
+            <VBox maxWidth="500"
+                  style="-fx-background-color: white; -fx-padding: 24;
+                         -fx-border-color: #E0E0EA; -fx-border-width: 1;
+                         -fx-effect: dropshadow(gaussian, #00000018, 8, 0, 0, 2);">
+
+                <Label text="Datos del Técnico"
+                       style="-fx-font-size: 16; -fx-font-weight: bold;
+                              -fx-text-fill: #32324A; -fx-padding: 0 0 8 0;"/>
+                <Separator style="-fx-padding: 0 0 16 0;"/>
+
+                <!-- IDs e info de solo lectura -->
+                <HBox spacing="24" style="-fx-padding: 10 0 14 0;">
+                    <Label fx:id="lblIdUsuario" text="ID Usuario: —"
+                           style="-fx-font-size: 12; -fx-text-fill: #707080;"/>
+                    <Label fx:id="lblIdTecnico" text="ID Técnico: —"
+                           style="-fx-font-size: 12; -fx-text-fill: #707080;"/>
+                    <Label fx:id="lblRol" text="Rol: —"
+                           style="-fx-font-size: 12; -fx-text-fill: #FFA500; -fx-font-weight: bold;"/>
+                </HBox>
+
+                <!-- Campos editables -->
+                <Label text="Nombre *"
+                       style="-fx-font-size: 12; -fx-text-fill: #505064; -fx-padding: 6 0 2 0;"/>
+                <TextField fx:id="txtNombre"
+                           style="-fx-font-size: 13; -fx-pref-height: 34;"/>
+
+                <Label text="Apellido *"
+                       style="-fx-font-size: 12; -fx-text-fill: #505064; -fx-padding: 8 0 2 0;"/>
+                <TextField fx:id="txtApellido"
+                           style="-fx-font-size: 13; -fx-pref-height: 34;"/>
+
+                <Label text="Correo *"
+                       style="-fx-font-size: 12; -fx-text-fill: #505064; -fx-padding: 8 0 2 0;"/>
+                <TextField fx:id="txtCorreo"
+                           style="-fx-font-size: 13; -fx-pref-height: 34;"/>
+
+                <Label text="Teléfono"
+                       style="-fx-font-size: 12; -fx-text-fill: #505064; -fx-padding: 8 0 2 0;"/>
+                <TextField fx:id="txtTelefono"
+                           style="-fx-font-size: 13; -fx-pref-height: 34;"/>
+
+                <!-- Info de solo lectura -->
+                <HBox spacing="24" style="-fx-padding: 14 0 10 0;">
+                    <Label fx:id="lblEspecialidad" text="Especialidad: —"
+                           style="-fx-font-size: 12; -fx-text-fill: #505064;"/>
+                    <Label fx:id="lblEstado" text="Estado: —"
+                           style="-fx-font-size: 12; -fx-text-fill: #505064;"/>
+                </HBox>
+
+                <Separator style="-fx-padding: 0 0 14 0;"/>
+
+                <!-- Botones -->
+                <HBox spacing="10" style="-fx-padding: 10 0 0 0;">
+                    <Button text="Guardar Cambios" onAction="#guardarCambios"
+                            HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                            style="-fx-background-color: #3CB371; -fx-text-fill: white;
+                                   -fx-font-weight: bold; -fx-cursor: hand;
+                                   -fx-pref-height: 38; -fx-border-color: transparent;"/>
+                    <Button text="Recargar" onAction="#cargarPerfil"
+                            style="-fx-background-color: #778899; -fx-text-fill: white;
+                                   -fx-font-weight: bold; -fx-cursor: hand;
+                                   -fx-pref-width: 100; -fx-pref-height: 38;
+                                   -fx-border-color: transparent;"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

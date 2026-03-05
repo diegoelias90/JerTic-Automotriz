@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sv.jertic.tecnico.controller.ServiciosController"
+            style="-fx-background-color: #F5F5FA;">
+
+    <top>
+        <HBox style="-fx-background-color: #1E1E28; -fx-padding: 14 20 14 20;"
+              alignment="CENTER_LEFT" spacing="20">
+            <Label text="Mis Servicios"
+                   style="-fx-font-size: 20; -fx-font-weight: bold;
+                          -fx-text-fill: #FFA500; -fx-font-family: 'Segoe UI';"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblInfo" text=""
+                   style="-fx-font-size: 12; -fx-text-fill: #B4B4C8; -fx-font-style: italic;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.62"
+                   style="-fx-background-color: #F5F5FA; -fx-padding: 10;">
+
+            <!-- Tabla de servicios -->
+            <TableView fx:id="tablaServicios" style="-fx-background-color: white;">
+                <columns>
+                    <TableColumn fx:id="colId"          text="ID"          prefWidth="55"/>
+                    <TableColumn fx:id="colCita"        text="Cita"        prefWidth="55"/>
+                    <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="180"/>
+                    <TableColumn fx:id="colCosto"       text="Costo"       prefWidth="80"/>
+                    <TableColumn fx:id="colEstado"      text="Estado"      prefWidth="100"/>
+                    <TableColumn fx:id="colTipo"        text="Tipo ID"     prefWidth="70"/>
+                    <TableColumn fx:id="colFechaInicio" text="Inicio"      prefWidth="100"/>
+                </columns>
+                <placeholder><Label text="No tenés servicios asignados."/></placeholder>
+            </TableView>
+
+            <!-- Formulario de edición -->
+            <VBox spacing="10"
+                  style="-fx-background-color: white; -fx-padding: 16;
+                         -fx-border-color: #E0E0EA; -fx-border-width: 1;">
+
+                <Label text="Editar Servicio"
+                       style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #32324A;"/>
+                <Label fx:id="lblServicioId" text="Servicio ID: —"
+                       style="-fx-font-size: 12; -fx-text-fill: #FFA500; -fx-font-weight: bold;"/>
+                <Separator/>
+
+                <Label text="Descripción"
+                       style="-fx-font-size: 12; -fx-text-fill: #505064;"/>
+                <TextArea fx:id="txtDescripcion" prefRowCount="4" wrapText="true"
+                          style="-fx-font-size: 13;" prefHeight="90"/>
+
+                <Label text="Costo ($) *"
+                       style="-fx-font-size: 12; -fx-text-fill: #505064;"/>
+                <TextField fx:id="txtCosto"
+                           style="-fx-font-size: 13; -fx-pref-height: 32;"/>
+
+                <Label text="Estado *"
+                       style="-fx-font-size: 12; -fx-text-fill: #505064;"/>
+                <ComboBox fx:id="cmbEstado" maxWidth="Infinity"
+                          style="-fx-font-size: 13;"/>
+
+                <HBox spacing="8" style="-fx-padding: 6 0 0 0;">
+                    <Button text="Guardar Cambios" onAction="#guardarCambios"
+                            style="-fx-background-color: #3CB371; -fx-text-fill: white;
+                                   -fx-font-weight: bold; -fx-cursor: hand;
+                                   -fx-pref-height: 34; -fx-border-color: transparent;"
+                            HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    <Button text="Limpiar" onAction="#limpiar"
+                            style="-fx-background-color: #6495ED; -fx-text-fill: white;
+                                   -fx-font-weight: bold; -fx-cursor: hand;
+                                   -fx-pref-height: 34; -fx-pref-width: 90;
+                                   -fx-border-color: transparent;"/>
+                </HBox>
+            </VBox>
+        </SplitPane>
+    </center>
+
+    <bottom>
+        <HBox style="-fx-background-color: #EBEBF2; -fx-padding: 10 12 10 12;
+                     -fx-border-color: #C8C8D7 transparent transparent transparent;
+                     -fx-border-width: 1 0 0 0;" spacing="10">
+            <Button text="Actualizar" onAction="#cargarServicios"
+                    style="-fx-background-color: #778899; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-cursor: hand;
+                           -fx-pref-width: 130; -fx-pref-height: 36;
+                           -fx-border-color: transparent;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

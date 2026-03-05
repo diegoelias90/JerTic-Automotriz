@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="sv.jertic.tecnico.controller.LoginController"
+      alignment="CENTER" spacing="0"
+      style="-fx-background-color: #161620;">
+
+    <!-- Logo -->
+    <VBox alignment="CENTER" spacing="4">
+        <padding><Insets top="36" right="40" bottom="20" left="40"/></padding>
+        <Label text="JERTIC"
+               style="-fx-font-size: 36; -fx-font-weight: bold;
+                      -fx-text-fill: #FFA500; -fx-font-family: 'Segoe UI';"/>
+        <Label text="Panel del Técnico"
+               style="-fx-font-size: 13; -fx-text-fill: #969696;
+                      -fx-font-family: 'Segoe UI';"/>
+    </VBox>
+
+    <!-- Formulario -->
+    <VBox spacing="0">
+        <padding><Insets top="0" right="40" bottom="0" left="40"/></padding>
+
+        <Label text="Correo electrónico"
+               style="-fx-font-size: 12; -fx-text-fill: #B4B4C8; -fx-font-family: 'Segoe UI';">
+            <VBox.margin><Insets top="6" bottom="2"/></VBox.margin>
+        </Label>
+        <TextField fx:id="txtCorreo"
+                   promptText="correo@jertic.com"
+                   style="-fx-background-color: #26263A; -fx-text-fill: white;
+                          -fx-prompt-text-fill: #606075; -fx-font-size: 14;
+                          -fx-border-color: #505064; -fx-border-width: 1;
+                          -fx-padding: 6 10 6 10; -fx-pref-height: 38;"/>
+
+        <Label text="Token / Contraseña"
+               style="-fx-font-size: 12; -fx-text-fill: #B4B4C8; -fx-font-family: 'Segoe UI';">
+            <VBox.margin><Insets top="12" bottom="2"/></VBox.margin>
+        </Label>
+        <PasswordField fx:id="txtToken"
+                       promptText="tu token de acceso"
+                       style="-fx-background-color: #26263A; -fx-text-fill: white;
+                              -fx-prompt-text-fill: #606075; -fx-font-size: 14;
+                              -fx-border-color: #505064; -fx-border-width: 1;
+                              -fx-padding: 6 10 6 10; -fx-pref-height: 38;"/>
+
+        <!-- Mensaje de error/estado -->
+        <Label fx:id="lblMensaje" text=""
+               wrapText="true" maxWidth="360"
+               style="-fx-text-fill: #FF6464; -fx-font-size: 12;">
+            <VBox.margin><Insets top="8" bottom="4"/></VBox.margin>
+        </Label>
+
+        <!-- Botón Ingresar -->
+        <Button fx:id="btnIngresar" text="Ingresar"
+                maxWidth="Infinity"
+                onAction="#handleLogin"
+                style="-fx-background-color: #FFA500; -fx-text-fill: #161620;
+                       -fx-font-size: 15; -fx-font-weight: bold;
+                       -fx-font-family: 'Segoe UI'; -fx-padding: 10;
+                       -fx-cursor: hand; -fx-border-radius: 2;
+                       -fx-background-radius: 2;">
+            <VBox.margin><Insets top="8" bottom="20"/></VBox.margin>
+        </Button>
+    </VBox>
+</VBox>

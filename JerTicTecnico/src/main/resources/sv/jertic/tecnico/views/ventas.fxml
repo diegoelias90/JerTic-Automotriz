@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sv.jertic.tecnico.controller.VentasController"
+            style="-fx-background-color: #F5F5FA;">
+
+    <top>
+        <HBox style="-fx-background-color: #1E1E28; -fx-padding: 14 20 14 20;"
+              alignment="CENTER_LEFT" spacing="20">
+            <Label text="Crear Venta"
+                   style="-fx-font-size: 20; -fx-font-weight: bold;
+                          -fx-text-fill: #FFA500; -fx-font-family: 'Segoe UI';"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblInfo" text=""
+                   style="-fx-font-size: 12; -fx-text-fill: #B4B4C8;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.55"
+                   style="-fx-background-color: #F5F5FA; -fx-padding: 10;">
+
+            <!-- Izquierda: productos disponibles -->
+            <VBox spacing="6" style="-fx-background-color: white; -fx-padding: 12;">
+                <Label text="Productos disponibles"
+                       style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #32324A;"/>
+                <TableView fx:id="tablaProductos" VBox.vgrow="ALWAYS"
+                           style="-fx-background-color: white;">
+                    <columns>
+                        <TableColumn fx:id="colIdProd"     text="ID"     prefWidth="55"/>
+                        <TableColumn fx:id="colNombreProd" text="Nombre" prefWidth="160"/>
+                        <TableColumn fx:id="colPrecioProd" text="Precio" prefWidth="80"/>
+                        <TableColumn fx:id="colStockProd"  text="Stock"  prefWidth="70"/>
+                    </columns>
+                    <placeholder><Label text="Sin productos."/></placeholder>
+                </TableView>
+
+                <!-- Agregar al carrito -->
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Cantidad:"
+                           style="-fx-font-size: 12; -fx-text-fill: #505064;"/>
+                    <TextField fx:id="txtCantidad" prefWidth="70"
+                               promptText="1"
+                               style="-fx-font-size: 13; -fx-pref-height: 32;"/>
+                    <Button text="Agregar al carrito" onAction="#agregarAlCarrito"
+                            style="-fx-background-color: #6495ED; -fx-text-fill: white;
+                                   -fx-font-weight: bold; -fx-cursor: hand;
+                                   -fx-pref-height: 32; -fx-border-color: transparent;"
+                            HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                </HBox>
+            </VBox>
+
+            <!-- Derecha: carrito + confirmar -->
+            <VBox spacing="8" style="-fx-background-color: white; -fx-padding: 12;">
+                <Label text="Carrito"
+                       style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #32324A;"/>
+                <TableView fx:id="tablaCarrito" VBox.vgrow="ALWAYS"
+                           style="-fx-background-color: white;" prefHeight="200">
+                    <columns>
+                        <TableColumn fx:id="colIdCart"       text="ID"       prefWidth="50"/>
+                        <TableColumn fx:id="colNombreCart"   text="Nombre"   prefWidth="150"/>
+                        <TableColumn fx:id="colCantCart"     text="Cantidad" prefWidth="75"/>
+                        <TableColumn fx:id="colSubtotalCart" text="Subtotal" prefWidth="90"/>
+                    </columns>
+                    <placeholder><Label text="Carrito vacío."/></placeholder>
+                </TableView>
+
+                <Button text="Quitar seleccionado" onAction="#quitarDelCarrito"
+                        style="-fx-background-color: #CD5C5C; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-cursor: hand;
+                               -fx-pref-height: 30; -fx-border-color: transparent;"
+                        maxWidth="Infinity"/>
+
+                <Label fx:id="lblTotal" text="Total: $0.00"
+                       style="-fx-font-size: 18; -fx-font-weight: bold;
+                              -fx-text-fill: #3CB371; -fx-padding: 4 0 4 0;"/>
+
+                <Separator/>
+
+                <Label text="Cliente *"
+                       style="-fx-font-size: 12; -fx-text-fill: #505064;"/>
+                <ComboBox fx:id="cmbCliente" maxWidth="Infinity"
+                          promptText="Seleccioná un cliente..."
+                          style="-fx-font-size: 13;"/>
+
+                <Button text="✔  Confirmar Venta" onAction="#crearVenta"
+                        maxWidth="Infinity"
+                        style="-fx-background-color: #FFA500; -fx-text-fill: #1A1A1A;
+                               -fx-font-size: 15; -fx-font-weight: bold;
+                               -fx-cursor: hand; -fx-pref-height: 44;
+                               -fx-border-color: transparent;"/>
+
+                <Separator/>
+
+                <!-- Historial de ventas -->
+                <Label text="Historial de Ventas"
+                       style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #32324A;"/>
+                <TableView fx:id="tablaVentas" prefHeight="130"
+                           style="-fx-background-color: white;">
+                    <columns>
+                        <TableColumn fx:id="colIdVenta"      text="ID"      prefWidth="50"/>
+                        <TableColumn fx:id="colClienteVenta" text="Cliente" prefWidth="75"/>
+                        <TableColumn fx:id="colFechaVenta"   text="Fecha"   prefWidth="100"/>
+                        <TableColumn fx:id="colTotalVenta"   text="Total"   prefWidth="80"/>
+                    </columns>
+                    <placeholder><Label text="Sin ventas."/></placeholder>
+                </TableView>
+            </VBox>
+        </SplitPane>
+    </center>
+
+    <bottom>
+        <HBox style="-fx-background-color: #EBEBF2; -fx-padding: 10 12 10 12;
+                     -fx-border-color: #C8C8D7 transparent transparent transparent;
+                     -fx-border-width: 1 0 0 0;" spacing="10">
+            <Button text="Actualizar productos" onAction="#cargarHistorialVentas"
+                    style="-fx-background-color: #778899; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-cursor: hand;
+                           -fx-pref-width: 170; -fx-pref-height: 36;
+                           -fx-border-color: transparent;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

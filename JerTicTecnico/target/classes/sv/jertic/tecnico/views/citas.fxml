@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sv.jertic.tecnico.controller.CitasController"
+            style="-fx-background-color: #F5F5FA;">
+
+    <!-- TÍTULO -->
+    <top>
+        <HBox style="-fx-background-color: #1E1E28; -fx-padding: 14 20 14 20;"
+              alignment="CENTER_LEFT" spacing="20">
+            <Label text="Mis Citas Asignadas"
+                   style="-fx-font-size: 20; -fx-font-weight: bold;
+                          -fx-text-fill: #FFA500; -fx-font-family: 'Segoe UI';"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblInfo" text=""
+                   style="-fx-font-size: 12; -fx-text-fill: #B4B4C8;
+                          -fx-font-style: italic;"/>
+        </HBox>
+    </top>
+
+    <!-- CONTENIDO: tabla + detalle -->
+    <center>
+        <SplitPane dividerPositions="0.65"
+                   style="-fx-background-color: #F5F5FA; -fx-padding: 10;">
+
+            <!-- Tabla de citas -->
+            <TableView fx:id="tablaCitas" style="-fx-background-color: white;">
+                <columns>
+                    <TableColumn fx:id="colIdCita"  text="ID Cita"    prefWidth="70"/>
+                    <TableColumn fx:id="colCliente" text="Cliente ID" prefWidth="90"/>
+                    <TableColumn fx:id="colFecha"   text="Fecha"      prefWidth="110"/>
+                    <TableColumn fx:id="colHora"    text="Hora"       prefWidth="80"/>
+                    <TableColumn fx:id="colMotivo"  text="Motivo"     prefWidth="220"/>
+                    <TableColumn fx:id="colEstado"  text="Estado"     prefWidth="100"/>
+                </columns>
+                <placeholder><Label text="No hay citas asignadas."/></placeholder>
+            </TableView>
+
+            <!-- Panel de detalle -->
+            <VBox spacing="8"
+                  style="-fx-background-color: white; -fx-padding: 16;
+                         -fx-border-color: #E0E0EA; -fx-border-width: 1;">
+                <Label text="Detalle de la cita"
+                       style="-fx-font-size: 14; -fx-font-weight: bold;
+                              -fx-text-fill: #32324A;"/>
+                <Separator/>
+                <Label fx:id="lblIdCita"  text="ID Cita: —"    style="-fx-font-size: 12; -fx-text-fill: #404055;"/>
+                <Label fx:id="lblCliente" text="Cliente ID: —"  style="-fx-font-size: 12; -fx-text-fill: #404055;"/>
+                <Label fx:id="lblFecha"   text="Fecha: —"       style="-fx-font-size: 12; -fx-text-fill: #404055;"/>
+                <Label fx:id="lblHora"    text="Hora: —"        style="-fx-font-size: 12; -fx-text-fill: #404055;"/>
+                <Label fx:id="lblMotivo"  text="Motivo: —"      style="-fx-font-size: 12; -fx-text-fill: #404055;"
+                       wrapText="true" maxWidth="280"/>
+                <Label fx:id="lblEstado"  text="Estado: —"      style="-fx-font-size: 12; -fx-text-fill: #404055;"/>
+            </VBox>
+        </SplitPane>
+    </center>
+
+    <!-- BARRA INFERIOR -->
+    <bottom>
+        <HBox style="-fx-background-color: #EBEBF2; -fx-padding: 10 12 10 12;
+                     -fx-border-color: #C8C8D7 transparent transparent transparent;
+                     -fx-border-width: 1 0 0 0;" spacing="10">
+            <Button text="Actualizar" onAction="#cargarCitas"
+                    style="-fx-background-color: #778899; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-cursor: hand;
+                           -fx-pref-width: 130; -fx-pref-height: 36;
+                           -fx-border-color: transparent;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

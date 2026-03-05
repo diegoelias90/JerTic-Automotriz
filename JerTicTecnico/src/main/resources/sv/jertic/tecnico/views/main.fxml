@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sv.jertic.tecnico.controller.MainController"
+            style="-fx-background-color: #F5F5FA;">
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SIDEBAR                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <left>
+        <VBox prefWidth="200" minWidth="200"
+              style="-fx-background-color: #12121C;">
+
+            <!-- Logo -->
+            <VBox.margin><Insets top="28"/></VBox.margin>
+            <Label text="JERTIC" alignment="CENTER"
+                   maxWidth="Infinity"
+                   style="-fx-font-size: 28; -fx-font-weight: bold;
+                          -fx-text-fill: #FFA500; -fx-font-family: 'Segoe UI';"/>
+            <Label text="Panel del Técnico" alignment="CENTER"
+                   maxWidth="Infinity"
+                   style="-fx-font-size: 11; -fx-text-fill: #646478;
+                          -fx-font-family: 'Segoe UI'; -fx-padding: 0 0 12 0;"/>
+
+            <!-- Tarjeta de usuario -->
+            <VBox style="-fx-background-color: #1C1C2A; -fx-padding: 10 12 10 12;"
+                  maxWidth="174">
+                <VBox.margin><Insets left="13" right="13"/></VBox.margin>
+                <Label fx:id="lblNombre"
+                       style="-fx-font-size: 13; -fx-font-weight: bold;
+                              -fx-text-fill: #DCDCEB; -fx-font-family: 'Segoe UI';"/>
+                <Label fx:id="lblRol"
+                       style="-fx-font-size: 11; -fx-text-fill: #FFA500;
+                              -fx-font-family: 'Segoe UI';"/>
+            </VBox>
+
+            <!-- Separador -->
+            <Separator style="-fx-background-color: #2D2D3E; -fx-padding: 8 13 0 13;">
+                <VBox.margin><Insets top="18" left="13" right="13" bottom="12"/></VBox.margin>
+            </Separator>
+
+            <!-- Etiqueta MENÚ -->
+            <Label text="MENÚ"
+                   style="-fx-font-size: 10; -fx-font-weight: bold;
+                          -fx-text-fill: #505064; -fx-padding: 0 0 6 18;
+                          -fx-font-family: 'Segoe UI';"/>
+
+            <!-- Botones de navegación -->
+            <Button fx:id="btnCitas"     text="Mis Citas"      prefHeight="42" maxWidth="Infinity" onAction="#mostrarCitas"/>
+            <Button fx:id="btnServicios" text="Mis Servicios"  prefHeight="42" maxWidth="Infinity" onAction="#mostrarServicios"/>
+            <Button fx:id="btnHistorial" text="Historial"      prefHeight="42" maxWidth="Infinity" onAction="#mostrarHistorial"/>
+            <Button fx:id="btnProductos" text="Inventario"     prefHeight="42" maxWidth="Infinity" onAction="#mostrarProductos"/>
+            <Button fx:id="btnVentas"    text="Ventas"         prefHeight="42" maxWidth="Infinity" onAction="#mostrarVentas"/>
+            <Button fx:id="btnPerfil"    text="Mi Perfil"      prefHeight="42" maxWidth="Infinity" onAction="#mostrarPerfil"/>
+
+            <!-- Empuje hacia abajo para botón de cierre de sesión -->
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Cerrar sesión -->
+            <VBox style="-fx-border-color: #262637 transparent transparent transparent;
+                         -fx-border-width: 1 0 0 0;">
+                <Button text="Cerrar sesión"
+                        maxWidth="Infinity"
+                        prefHeight="48"
+                        onAction="#cerrarSesion"
+                        style="-fx-background-color: transparent;
+                               -fx-text-fill: #DC5050;
+                               -fx-font-size: 13; -fx-font-family: 'Segoe UI';
+                               -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 20;
+                               -fx-cursor: hand; -fx-border-color: transparent;"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- ÁREA DE CONTENIDO — se rellena dinámicamente               -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <center>
+        <AnchorPane fx:id="contentPane"
+                    style="-fx-background-color: #F5F5FA;"/>
+    </center>
+</BorderPane>

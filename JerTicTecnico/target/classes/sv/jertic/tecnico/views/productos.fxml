@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sv.jertic.tecnico.controller.ProductosController"
+            style="-fx-background-color: #F5F5FA;">
+
+    <top>
+        <HBox style="-fx-background-color: #1E1E28; -fx-padding: 14 20 14 20;"
+              alignment="CENTER_LEFT" spacing="20">
+            <Label text="Inventario de Productos"
+                   style="-fx-font-size: 20; -fx-font-weight: bold;
+                          -fx-text-fill: #FFA500; -fx-font-family: 'Segoe UI';"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Solo lectura"
+                   style="-fx-font-size: 11; -fx-text-fill: #B4B4C8; -fx-font-style: italic;"/>
+        </HBox>
+    </top>
+
+    <!-- Barra de búsqueda -->
+    <center>
+        <VBox style="-fx-padding: 10;" spacing="10">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Buscar:"
+                       style="-fx-font-size: 13; -fx-text-fill: #404055;"/>
+                <TextField fx:id="txtBuscar"
+                           promptText="Nombre, descripción o tipo..."
+                           prefWidth="320"
+                           style="-fx-font-size: 13; -fx-pref-height: 32;"/>
+                <Label fx:id="lblInfo" text=""
+                       style="-fx-font-size: 11; -fx-text-fill: #707080;"/>
+            </HBox>
+
+            <TableView fx:id="tablaProductos" VBox.vgrow="ALWAYS"
+                       style="-fx-background-color: white;">
+                <columns>
+                    <TableColumn fx:id="colId"          text="ID"          prefWidth="60"/>
+                    <TableColumn fx:id="colNombre"      text="Nombre"      prefWidth="160"/>
+                    <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="220"/>
+                    <TableColumn fx:id="colPrecio"      text="Precio"      prefWidth="90"/>
+                    <TableColumn fx:id="colStock"       text="Stock"       prefWidth="80"/>
+                    <TableColumn fx:id="colTipo"        text="Tipo"        prefWidth="110"/>
+                </columns>
+                <placeholder><Label text="Sin productos cargados."/></placeholder>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox style="-fx-background-color: #EBEBF2; -fx-padding: 10 12 10 12;
+                     -fx-border-color: #C8C8D7 transparent transparent transparent;
+                     -fx-border-width: 1 0 0 0;" spacing="10" alignment="CENTER_LEFT">
+            <Button text="Actualizar" onAction="#cargarProductos"
+                    style="-fx-background-color: #778899; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-cursor: hand;
+                           -fx-pref-width: 130; -fx-pref-height: 36;
+                           -fx-border-color: transparent;"/>
+            <Label text="  ■ Rojo = sin stock    ■ Amarillo = stock bajo (&lt; 5)"
+                   style="-fx-font-size: 11; -fx-text-fill: #808090;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

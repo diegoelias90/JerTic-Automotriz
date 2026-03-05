@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sv.jertic.tecnico.controller.HistorialController"
+            style="-fx-background-color: #F5F5FA;">
+
+    <top>
+        <HBox style="-fx-background-color: #1E1E28; -fx-padding: 14 20 14 20;"
+              alignment="CENTER_LEFT" spacing="20">
+            <Label text="Historial de Servicios"
+                   style="-fx-font-size: 20; -fx-font-weight: bold;
+                          -fx-text-fill: #FFA500; -fx-font-family: 'Segoe UI';"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblInfo" text="Selecciona un servicio"
+                   style="-fx-font-size: 12; -fx-text-fill: #B4B4C8; -fx-font-style: italic;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.42" style="-fx-background-color: #F5F5FA;">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+            <VBox style="-fx-background-color: white; -fx-padding: 12;" spacing="6">
+                <Label text="Mis servicios"
+                       style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #32324A;"/>
+                <TableView fx:id="tablaServicios" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colIdServ"     text="ID"          prefWidth="50"/>
+                        <TableColumn fx:id="colCitaServ"   text="Cita ID"     prefWidth="70"/>
+                        <TableColumn fx:id="colDescServ"   text="Descripcion" prefWidth="180"/>
+                        <TableColumn fx:id="colEstadoServ" text="Estado"      prefWidth="100"/>
+                    </columns>
+                    <placeholder><Label text="Sin servicios."/></placeholder>
+                </TableView>
+            </VBox>
+
+            <VBox style="-fx-background-color: white; -fx-padding: 12;" spacing="8">
+                <Label fx:id="lblServSeleccionado" text="Historial del Servicio ID: —"
+                       style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #FFA500;"
+                       wrapText="true"/>
+                <TableView fx:id="tablaHistorial" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colIdHist"    text="ID"          prefWidth="50"/>
+                        <TableColumn fx:id="colDescHist"  text="Descripcion" prefWidth="260"/>
+                        <TableColumn fx:id="colFechaHist" text="Fecha"       prefWidth="130"/>
+                    </columns>
+                    <placeholder><Label text="Sin entradas."/></placeholder>
+                </TableView>
+
+                <Separator/>
+
+                <Label text="Nueva entrada"
+                       style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #32324A;"/>
+                <TextArea fx:id="txtNuevaEntrada"
+                          promptText="Describe lo realizado en este servicio..."
+                          prefRowCount="3" wrapText="true"
+                          style="-fx-font-size: 13;"/>
+                <Button text="Agregar al Historial" onAction="#agregarEntrada"
+                        maxWidth="Infinity"
+                        style="-fx-background-color: #3CB371; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-cursor: hand;
+                               -fx-pref-height: 36; -fx-border-color: transparent;"/>
+            </VBox>
+        </SplitPane>
+    </center>
+
+    <bottom>
+        <HBox style="-fx-background-color: #EBEBF2; -fx-padding: 10 12 10 12;" spacing="10">
+            <Button text="Actualizar" onAction="#cargarServicios"
+                    style="-fx-background-color: #778899; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-cursor: hand;
+                           -fx-pref-width: 130; -fx-pref-height: 36;
+                           -fx-border-color: transparent;"/>
+        </HBox>
+    </bottom>
+</BorderPane>
